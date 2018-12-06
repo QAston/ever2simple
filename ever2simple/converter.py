@@ -1,8 +1,8 @@
 import json
 import os
 import sys
+import io
 from csv import DictWriter
-from io import StringIO
 from dateutil.parser import parse
 from html2text import HTML2Text
 from lxml import etree
@@ -76,7 +76,7 @@ class EverConverter(object):
             print("File does not exist: %s" % self.enex_filename)
             sys.exit(1)
         # TODO: use with here, but pyflakes barfs on it
-        enex_file = open(self.enex_filename, encoding='utf8')
+        enex_file = io.open(self.enex_filename, encoding='utf8')
         xml_tree = self._load_xml(enex_file)
         enex_file.close()
         notes = self.prepare_notes(xml_tree)
@@ -95,9 +95,9 @@ class EverConverter(object):
 
     def _convert_csv(self, notes):
         if self.stdout:
-            simple_file = StringIO()
+            simple_file = io.StringIO()
         else:
-            simple_file = open(self.simple_filename, 'w', encoding='utf8')
+            simple_file = io.open(self.simple_filename, 'w', encoding='utf8')
         writer = DictWriter(simple_file, self.fieldnames)
         writer.writerows(notes)
         if self.stdout:
@@ -110,7 +110,7 @@ class EverConverter(object):
         if self.simple_filename is None:
             sys.stdout.write(json.dumps(notes))
         else:
-            with open(self.simple_filename, 'w', encoding='utf8') as output_file:
+            with io.open(self.simple_filename, 'w', encoding='utf8') as output_file:
                 json.dump(notes, output_file)
 
     def _convert_dir(self, notes):
@@ -135,7 +135,7 @@ class EverConverter(object):
                     count = count + 1
                     output_file_path_no_ext = output_file_path_no_ext_original + " (" + str(count) + ")"
                 output_file_path = output_file_path_no_ext + ".md"
-                with open(output_file_path, 'w', encoding='utf8') as output_file:
+                with io.open(output_file_path, 'w', encoding='utf8') as output_file:
                     if self.metadata:
                         output_file.write(self._metadata(note))
                     output_file.write(note['content'])
