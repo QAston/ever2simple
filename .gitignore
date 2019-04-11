@@ -1,4 +1,14 @@
 dist
 /env/
 *egg-info/
+.idea
+*.json
 *.pyc
+*.egg-info/
+1html
+*.enex
+simplenotedir*
+include
+lib
+tcl
+Scripts
